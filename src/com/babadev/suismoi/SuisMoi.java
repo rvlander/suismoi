@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ToggleButton;
 
-import com.example.suismoi.R;
-
 public class SuisMoi extends Activity {
 
 	private ToggleButton startStopServicetoggleButton;
