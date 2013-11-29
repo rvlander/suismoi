@@ -30,7 +30,7 @@
 
             function init() {
                 $.getJSON('getGPSPosition.php', function(data){
-                    displayMap(data.lat,data.lon);
+                    displayMap(data[0].latitude,data[0].longitude);
                 });
             }
 
