@@ -19,7 +19,7 @@ import android.widget.Toast;
 public class TrackMeService extends Service {
 
 	private final String GPS_OFF_MESSAGE = "GPS OFF, veuillez activer le GPS";
-	private final String URL = "http://127.0.0.1/SuisMoiServer/test.php";
+	private final String URL = "http://www.rvlander.org/suismoi/setGPSPosition.php";
 	private final DefaultHttpClient httpclient = new DefaultHttpClient();
 	private LocationManager locationMgr;
 	private LocationListener onLocationChange =
@@ -64,7 +64,8 @@ public class TrackMeService extends Service {
 			final String deviceName = android.os.Build.MODEL;
 			final String message = "Position envoyée : " + deviceName + "@" + latitude + "-" + longitude;
 			Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-            httpclient.execute(new HttpGet(URL));
+            final String request = URL+"?id=bastien&pass=bastien&lat="+latitude+"&lon="+longitude;
+			httpclient.execute(new HttpGet(request));
 		}
 
 	};
