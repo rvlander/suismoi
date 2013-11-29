@@ -3,10 +3,14 @@
 include('./include/config.php');
 include('./include/dbaccess.php');
 
-$gps = getGPS('bastien');
+$identifiant = filter_input(INPUT_GET, 'id' , FILTER_SANITIZE_STRING);
 
-$jsonstring = json_encode($gps);
-echo $jsonstring;
+if($identifiant){
+    $gps = getGPS($identifiant);
+
+    $jsonstring = json_encode(end($gps));
+    echo $jsonstring;
+}
 
 
 ?>

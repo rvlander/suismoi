@@ -1,13 +1,15 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenLayers Basic Example</title>
+        <meta charset="UTF-8">
 
+        <title>OpenLayers Basic Example</title>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
         <script>
 
-            function displayMap(lat,lon) {
+            function displayMap(lat, lon) {
                 map = new OpenLayers.Map("mapdiv");
                 var mapnik = new OpenLayers.Layer.OSM();
                 map.addLayer(mapnik);
@@ -28,11 +30,31 @@
                 map.setCenter(lonlat, zoom);
             }
 
-            function init() {
-                $.getJSON('getGPSPosition.php', function(data){
-                    displayMap(data[0].latitude,data[0].longitude);
+            function submit() {
+                var identifiant;
+                id = $("#id").val();
+                $.getJSON('getGPSPosition.php?id=' + id, function(data) {
+                    displayMap(data.latitude, data.longitude);
                 });
             }
+
+            function init() {
+                $("#id").keypress(function(e) {
+                    if (e.which == 13) {
+                        submit();
+                    }
+                });
+
+                $("#button").click(function() {
+                        submit();
+                });
+
+
+            }
+
+
+
+
 
 
             /*function updateMarker() {
@@ -64,7 +86,7 @@
     </head>
 
     <body onload="init();">
-        <p>My HTML page with an embedded map</p>
+        <input id="id"/><div id="button">Submit</div>
         <div id="mapdiv"></div>
     </body>
 </html>

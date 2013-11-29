@@ -9,11 +9,6 @@ $passphrase = filter_input(INPUT_GET, 'pass' , FILTER_SANITIZE_STRING);
 $latidude = filter_input(INPUT_GET, 'lat' , FILTER_VALIDATE_FLOAT);
 $longitude = filter_input(INPUT_GET, 'lon' , FILTER_VALIDATE_FLOAT);
 
-echo $identifiant;
-echo $passphrase;
-echo $latidude;
-echo $longitude;
-
 if($identifiant && $passphrase
         && $latidude && $longitude){
     $uidt = getUserId($identifiant,$passphrase);
