@@ -2,6 +2,7 @@ package com.babadev.suismoi;
 
 import java.io.IOException;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -37,8 +38,10 @@ public class TrackMeService extends Service {
 				final String longitude = String.valueOf(location.getLongitude());
 				try {
 					sendPosition(latitude, longitude);
-				} catch (Exception e) {
-					Toast.makeText(getBaseContext(), "Server Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+				} catch (ClientProtocolException e) {
+					Toast.makeText(getBaseContext(), "Server Error - ClientProtocolException: " + e.getMessage(), Toast.LENGTH_LONG).show();
+				} catch (IOException e) {
+					Toast.makeText(getBaseContext(), "Server Error - IOException: " + e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 			} else {
 				Toast.makeText(getBaseContext(), GPS_OFF_MESSAGE, Toast.LENGTH_LONG).show();
@@ -65,7 +68,9 @@ public class TrackMeService extends Service {
 			final String message = "Position envoyée : " + deviceName + "@" + latitude + "-" + longitude;
 			Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
             final String request = URL+"?id=bastien&pass=bastien&lat="+latitude+"&lon="+longitude;
-			httpclient.execute(new HttpGet(request));
+            final HttpGet httpGet = new HttpGet(request);
+			HttpResponse response = httpclient.execute(httpGet);
+			Toast.makeText(getBaseContext(), response.toString(), Toast.LENGTH_LONG).show();
 		}
 
 	};

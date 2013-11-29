@@ -1,5 +1,12 @@
 package com.babadev.suismoi;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -62,5 +69,5 @@ public class SuisMoi extends Activity {
 		getMenuInflater().inflate(R.menu.suis_moi, menu);
 		return true;
 	}
-
+	
 }
