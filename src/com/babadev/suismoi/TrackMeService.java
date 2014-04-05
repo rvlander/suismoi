@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class TrackMeService extends Service {
 
 	private final String GPS_OFF_MESSAGE = "GPS OFF, veuillez activer le GPS";
-	private final String URL = "http://www.rvlander.org/suismoi/setGPSPosition.php";
+	private final String URL = "http://www.gaetanandre.eu/setGPSPosition.php";
 	private final DefaultHttpClient httpclient = new DefaultHttpClient();
 	private LocationManager locationMgr;
 	private LocationListener onLocationChange =
@@ -31,31 +31,29 @@ public class TrackMeService extends Service {
 		public void onLocationChanged(Location location) {
 
 			final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			final boolean gpsStatus = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			final boolean gpsStatus = manager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
 			if (gpsStatus) {
 				final String latitude = String.valueOf(location.getLatitude());
-				final String longitude = String.valueOf(location.getLongitude());
-				try {
-					sendPosition(latitude, longitude);
-				} catch (ClientProtocolException e) {
-					Toast.makeText(getBaseContext(), "Server Error - ClientProtocolException: " + e.getMessage(), Toast.LENGTH_LONG).show();
-				} catch (IOException e) {
-					Toast.makeText(getBaseContext(), "Server Error - IOException: " + e.getMessage(), Toast.LENGTH_LONG).show();
-				}
-			} else {
-				Toast.makeText(getBaseContext(), GPS_OFF_MESSAGE, Toast.LENGTH_LONG).show();
+				final String longitude = String
+						.valueOf(location.getLongitude());
+
+				sendPosition(latitude, longitude);
 			}
+
 		}
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			Toast.makeText(getBaseContext(), "GPS OFF", Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), "GPS OFF", Toast.LENGTH_LONG)
+					.show();
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			Toast.makeText(getBaseContext(), "GPS ON", Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), "GPS ON", Toast.LENGTH_LONG)
+					.show();
 		}
 
 		@Override
@@ -63,14 +61,36 @@ public class TrackMeService extends Service {
 			// TODO Auto-generated method stub
 		}
 
-		private void sendPosition(String latitude, String longitude) throws ClientProtocolException, IOException {
+		private void sendPosition(String latitude, String longitude) {
 			final String deviceName = android.os.Build.MODEL;
-			final String message = "Position envoyée : " + deviceName + "@" + latitude + "-" + longitude;
+			final String message = "Position envoyÃ©e : " + deviceName + "@"
+					+ latitude + "-" + longitude;
 			Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-            final String request = URL+"?id=bastien&pass=bastien&lat="+latitude+"&lon="+longitude;
-            final HttpGet httpGet = new HttpGet(request);
-			HttpResponse response = httpclient.execute(httpGet);
-			Toast.makeText(getBaseContext(), response.toString(), Toast.LENGTH_LONG).show();
+			final String request = URL + "?id=bastien&pass=bastien&lat="
+					+ latitude + "&lon=" + longitude;
+
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						final HttpGet httpGet = new HttpGet(request);
+						HttpResponse response = httpclient.execute(httpGet);
+						//Toast.makeText(getBaseContext(), response.toString(),
+								//Toast.LENGTH_LONG).show();
+					} catch (ClientProtocolException e) {
+						/*Toast.makeText(
+								getBaseContext(),
+								"Server Error - ClientProtocolException: "
+										+ e.getMessage(), Toast.LENGTH_LONG)
+								.show();*/
+					} catch (IOException e) {
+						/*Toast.makeText(
+								getBaseContext(),
+								"Server Error - IOException: " + e.getMessage(),
+								Toast.LENGTH_LONG).show();*/
+					}
+				}
+			}).start();
 		}
 
 	};
@@ -84,11 +104,14 @@ public class TrackMeService extends Service {
 	public void onCreate() {
 		locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if (locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 100, onLocationChange);
+			locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+					100, onLocationChange);
 			super.onCreate();
-			Toast.makeText(getBaseContext(), "Service SuisMoi : Demarré", Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), "Service SuisMoi : DemarrÃ©",
+					Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(getBaseContext(), GPS_OFF_MESSAGE, Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), GPS_OFF_MESSAGE, Toast.LENGTH_LONG)
+					.show();
 		}
 	}
 
@@ -99,7 +122,8 @@ public class TrackMeService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(getBaseContext(), "Service SuisMoi : Arrêté", Toast.LENGTH_LONG).show();
+		Toast.makeText(getBaseContext(), "Service SuisMoi : ArrÃ©tÃ©",
+				Toast.LENGTH_LONG).show();
 		locationMgr.removeUpdates(onLocationChange);
 		super.onDestroy();
 	}
